@@ -114,15 +114,15 @@ func (o *WsBusiness) CandleStick(instId string, candleType CandleStickType) *Exe
 }
 
 func unmarshallCandleStickData(raw RawTopic) (Topic[CandleSticksData], error) {
-	nilData := *new(Topic[CandleSticksData])
+	candleData := *new(Topic[CandleSticksData])
 	topic, err := UnmarshalRawTopic[[][]string](raw)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	data := topic.Data[0]
 	//copy topic
-	nilData.Arg = topic.Arg
-	nilData.Action = topic.Action
+	candleData.Arg = topic.Arg
+	candleData.Action = topic.Action
 
 	var ticks int64
 	var timestamp time.Time
@@ -130,43 +130,43 @@ func unmarshallCandleStickData(raw RawTopic) (Topic[CandleSticksData], error) {
 	var confirm bool
 	ticks, err = strconv.ParseInt(data[0], 10, 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	timestamp = time.UnixMilli(ticks)
 	o, err = strconv.ParseFloat(data[1], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	h, err = strconv.ParseFloat(data[2], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	l, err = strconv.ParseFloat(data[3], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	c, err = strconv.ParseFloat(data[4], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	v, err = strconv.ParseFloat(data[5], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	vCcy, err = strconv.ParseFloat(data[6], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	vCcyQuote, err = strconv.ParseFloat(data[7], 64)
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 	confirm, err = strconv.ParseBool(data[8])
 	if err != nil {
-		return nilData, err
+		return candleData, err
 	}
 
-	nilData.Data = CandleSticksData{
+	candleData.Data = CandleSticksData{
 		timestamp,
 		o,
 		c,
@@ -177,5 +177,5 @@ func unmarshallCandleStickData(raw RawTopic) (Topic[CandleSticksData], error) {
 		vCcyQuote,
 		confirm,
 	}
-	return nilData, nil
+	return candleData, nil
 }
