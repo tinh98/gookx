@@ -131,3 +131,35 @@ const (
 	LongShortMode PositionMode = "long_short_mode"
 	NetMode       PositionMode = "net_mode"
 )
+
+type CandleStickType string
+
+const (
+	Candle3M     CandleStickType = "candle3M"
+	Candle1M     CandleStickType = "candle1M"
+	Candle1W     CandleStickType = "candle1W"
+	Candle1D     CandleStickType = "candle1D"
+	Candle2D     CandleStickType = "candle2D"
+	Candle3D     CandleStickType = "candle3D"
+	Candle5D     CandleStickType = "candle5D"
+	Candle12H    CandleStickType = "candle12H"
+	Candle6H     CandleStickType = "candle6H"
+	Candle4H     CandleStickType = "candle4H"
+	Candle2h     CandleStickType = "candle2H"
+	Candle1H     CandleStickType = "candle1H"
+	Candle30m    CandleStickType = "candle30m"
+	Candle15m    CandleStickType = "candle15m"
+	Candle5m     CandleStickType = "candle5m"
+	Candle3m     CandleStickType = "candle3m"
+	Candle1m     CandleStickType = "candle1m"
+	Candle1s     CandleStickType = "candle1s"
+	Candle3Mutc  CandleStickType = "candle3Mutc"
+	Candle1Mutc  CandleStickType = "candle1Mutc"
+	Candle1Wutc  CandleStickType = "candle1Wutc"
+	Candle1Dutc  CandleStickType = "candle1Dutc"
+	Candle2Dutc  CandleStickType = "candle2Dutc"
+	Candle3Dutc  CandleStickType = "candle3Dutc"
+	Candle5Dutc  CandleStickType = "candle5Dutc"
+	Candle12Hutc CandleStickType = "candle12Hutc"
+	Candle6Hutc  CandleStickType = "candle6Hutc"
+)

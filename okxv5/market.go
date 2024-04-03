@@ -2,6 +2,7 @@ package okxv5
 
 import (
 	"github.com/msw-x/moon/ujson"
+	"time"
 )
 
 // Get instruments
@@ -114,4 +115,17 @@ type Orderbook struct {
 	Bids  [][]ujson.Float64 `json:"bids"`
 	Ts    ujson.Int64       `json:"ts"`
 	SeqId ujson.Int64       `json:"seqId"`
+}
+
+// struct for ws-candlesticks-channel
+type CandleSticksData struct {
+	Timestamp   time.Time `json:"ts"`
+	OpenPrice   float64   `json:"open"`
+	ClosePrice  float64   `json:"close"`
+	HighPrice   float64   `json:"high"`
+	LowPrice    float64   `json:"low"`
+	Volume      float64   `json:"vol"`
+	VolumeCcy   float64   `json:"volCcy"`
+	VolCcyQuote float64   `json:"volCcyQuote"` //currency
+	Confirm     bool      `json:"confirm"`
 }
