@@ -101,25 +101,24 @@ func (o *WsBusiness) onTopic(data []byte) error {
 	return o.subscriptions.processTopic(data)
 }
 
-func (o *WsBusiness) CandleStick(instId string, candleType CandleStickType) *Executor[CandleSticksData] {
+func (o *WsBusiness) CandleStick(instId string, candleType CandleStickType) *Executor[[]CandleSticksData] {
 
 	args := SubscriptionArgs{
 		Channel: string(candleType),
 		InstId:  instId,
 	}
-	executor := NewExecutor[CandleSticksData](args, o.subscriptions)
+	executor := NewExecutor[[]CandleSticksData](args, o.subscriptions)
 	executor.SetUnMarshaller(unmarshallCandleStickData)
 
 	return executor
 }
 
-func unmarshallCandleStickData(raw RawTopic) (Topic[CandleSticksData], error) {
-	candleData := *new(Topic[CandleSticksData])
+func unmarshallCandleStickData(raw RawTopic) (Topic[[]CandleSticksData], error) {
+	candleData := *new(Topic[[]CandleSticksData])
 	topic, err := UnmarshalRawTopic[[][]string](raw)
 	if err != nil {
 		return candleData, err
 	}
-	data := topic.Data[0]
 	//copy topic
 	candleData.Arg = topic.Arg
 	candleData.Action = topic.Action
@@ -128,54 +127,60 @@ func unmarshallCandleStickData(raw RawTopic) (Topic[CandleSticksData], error) {
 	var timestamp time.Time
 	var o, h, l, c, v, vCcy, vCcyQuote float64
 	var confirm bool
-	ticks, err = strconv.ParseInt(data[0], 10, 64)
-	if err != nil {
-		return candleData, err
-	}
-	timestamp = time.UnixMilli(ticks)
-	o, err = strconv.ParseFloat(data[1], 64)
-	if err != nil {
-		return candleData, err
-	}
-	h, err = strconv.ParseFloat(data[2], 64)
-	if err != nil {
-		return candleData, err
-	}
-	l, err = strconv.ParseFloat(data[3], 64)
-	if err != nil {
-		return candleData, err
-	}
-	c, err = strconv.ParseFloat(data[4], 64)
-	if err != nil {
-		return candleData, err
-	}
-	v, err = strconv.ParseFloat(data[5], 64)
-	if err != nil {
-		return candleData, err
-	}
-	vCcy, err = strconv.ParseFloat(data[6], 64)
-	if err != nil {
-		return candleData, err
-	}
-	vCcyQuote, err = strconv.ParseFloat(data[7], 64)
-	if err != nil {
-		return candleData, err
-	}
-	confirm, err = strconv.ParseBool(data[8])
-	if err != nil {
-		return candleData, err
+	var candelData CandleSticksData
+	//kline data
+	for _, data := range topic.Data {
+		ticks, err = strconv.ParseInt(data[0], 10, 64)
+		if err != nil {
+			return candleData, err
+		}
+		timestamp = time.UnixMilli(ticks)
+		o, err = strconv.ParseFloat(data[1], 64)
+		if err != nil {
+			return candleData, err
+		}
+		h, err = strconv.ParseFloat(data[2], 64)
+		if err != nil {
+			return candleData, err
+		}
+		l, err = strconv.ParseFloat(data[3], 64)
+		if err != nil {
+			return candleData, err
+		}
+		c, err = strconv.ParseFloat(data[4], 64)
+		if err != nil {
+			return candleData, err
+		}
+		v, err = strconv.ParseFloat(data[5], 64)
+		if err != nil {
+			return candleData, err
+		}
+		vCcy, err = strconv.ParseFloat(data[6], 64)
+		if err != nil {
+			return candleData, err
+		}
+		vCcyQuote, err = strconv.ParseFloat(data[7], 64)
+		if err != nil {
+			return candleData, err
+		}
+		confirm, err = strconv.ParseBool(data[8])
+		if err != nil {
+			return candleData, err
+		}
+
+		candelData = CandleSticksData{
+			timestamp,
+			o,
+			c,
+			h,
+			l,
+			v,
+			vCcy,
+			vCcyQuote,
+			confirm,
+		}
+		candleData.Data = append(candleData.Data, candelData)
 	}
 
-	candleData.Data = CandleSticksData{
-		timestamp,
-		o,
-		c,
-		h,
-		l,
-		v,
-		vCcy,
-		vCcyQuote,
-		confirm,
-	}
 	return candleData, nil
 }
