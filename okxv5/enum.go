@@ -20,9 +20,10 @@ const (
 type TradeMode string
 
 const (
-	CrossMode    TradeMode = "cross"
-	IsolatedMode TradeMode = "isolated"
-	CashMode     TradeMode = "cash"
+	CrossMode        TradeMode = "cross"
+	IsolatedMode     TradeMode = "isolated"
+	CashMode         TradeMode = "cash"
+	SpotIsolatedMode TradeMode = "spot_isolated"
 )
 
 type Side string

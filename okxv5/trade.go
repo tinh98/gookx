@@ -9,7 +9,8 @@ type PlaceOrder struct {
 	TdMode     TradeMode
 	Side       Side
 	OrdType    OrderType
-	Sz         float64
+	Sz         string   // Quantity of the instrument to buy or sell
+	Px         string   `json:",omitempty"` // Limit price (the price you want to buy or sell at)
 	PosSide    *PosSide `json:",omitempty"`
 	ClOrdId    string   `json:",omitempty"`
 	ReduceOnly *bool    `json:",omitempty"`
@@ -100,4 +101,25 @@ func (o *Client) GetOrderDetails(v GetOrderDetails) Response[[]RetrievedOrderDet
 
 func (o GetOrderDetails) Do(c *Client) Response[[]RetrievedOrderDetails] {
 	return Get(c, "trade/order", o, forward[[]RetrievedOrderDetails])
+}
+
+type CancelOrder struct {
+	InstId  string
+	ClOrdId string
+	OrdId   string
+}
+
+type CancelOrderResponse struct {
+	ClOrdId string
+	OrdId   string
+	SCode   ujson.Int64
+	SMsg    string
+}
+
+func (o *Client) CancelOrder(v CancelOrder) Response[CancelOrderResponse] {
+	return v.Do(o)
+}
+
+func (o CancelOrder) Do(c *Client) Response[CancelOrderResponse] {
+	return Get(c, "trade/cancel-order", o, forward[CancelOrderResponse])
 }
