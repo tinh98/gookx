@@ -3,6 +3,8 @@ package okxv5
 type Executor[T any] struct {
 	Args          SubscriptionArgs
 	subscriptions *Subscriptions
+
+	unmarshalRawTopic func(data RawTopic) (Topic[T], error)
 }
 
 func NewExecutor[T any](args SubscriptionArgs, subscriptions *Subscriptions) *Executor[T] {
@@ -18,6 +20,13 @@ func (o *Executor[T]) Subscribe(onShot func(Topic[T])) {
 		// out, _ := json.Marshal(raw)
 		// fmt.Print(string(out) + "\n\n")
 
+		if o.unmarshalRawTopic != nil {
+			topic, err := o.unmarshalRawTopic(raw)
+			if err == nil {
+				onShot(topic)
+			}
+			return err
+		}
 		topic, err := UnmarshalRawTopic[T](raw)
 
 		if err == nil {
@@ -29,4 +38,8 @@ func (o *Executor[T]) Subscribe(onShot func(Topic[T])) {
 
 func (o *Executor[T]) Unsubscribe() {
 	o.subscriptions.unsubscribe(o.Args)
+}
+
+func (o *Executor[T]) SetUnMarshaller(unMarshaller func(data RawTopic) (Topic[T], error)) {
+	o.unmarshalRawTopic = unMarshaller
 }
