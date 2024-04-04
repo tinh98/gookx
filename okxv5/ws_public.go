@@ -11,11 +11,14 @@ type WsPublic struct {
 	subscriptions *Subscriptions
 }
 
-func NewWsPublic() *WsPublic {
+func NewWsPublic(isTest bool) *WsPublic {
 	o := new(WsPublic)
-	o.c = NewWsClient()
+	o.c = NewWsClient(isTest)
 	o.subscriptions = NewSubscriptions(o)
 	o.c.WithPath("v5/public")
+	if isTest {
+		o.c.WithPath("v5/public" + BrokerId)
+	}
 	return o
 }
 

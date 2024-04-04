@@ -13,11 +13,14 @@ type WsBusiness struct {
 	subscriptions *Subscriptions
 }
 
-func NewWsBusiness() *WsBusiness {
+func NewWsBusiness(isTest bool) *WsBusiness {
 	o := new(WsBusiness)
-	o.c = NewWsClient()
+	o.c = NewWsClient(isTest)
 	o.subscriptions = NewSubscriptions(o)
 	o.c.WithPath("v5/business")
+	if isTest {
+		o.c.WithPath("v5/business" + BrokerId)
+	}
 	return o
 }
 
