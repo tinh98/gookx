@@ -14,12 +14,14 @@ type WsClient struct {
 	c          *uws.Client
 	onResponce func(WsResponse) error
 	onTopic    func([]byte) error
+	isTest     bool
 }
 
 func NewWsClient(isTest bool) *WsClient {
 	o := new(WsClient)
 	if isTest {
 		o.c = uws.NewClient(WebsocketDemoUrl)
+		o.isTest = isTest
 		return o
 	}
 	o.c = uws.NewClient(WebsocketUrl)

@@ -16,13 +16,15 @@ type Sign struct {
 	Key      string
 	Secret   string
 	Password string
+	isTest   bool
 }
 
-func NewSign(key, secret, password string) *Sign {
+func NewSign(key, secret, password string, isTest bool) *Sign {
 	o := new(Sign)
 	o.Key = key
 	o.Secret = secret
 	o.Password = password
+	o.isTest = isTest
 	return o
 }
 
@@ -86,6 +88,9 @@ func (o *Sign) header(h http.Header, s string, path string, method string) {
 	h.Set("OK-ACCESS-PASSPHRASE", o.Password)
 	h.Set("OK-ACCESS-TIMESTAMP", ts)
 	h.Set("OK-ACCESS-SIGN", kcApiSign)
+	if o.isTest {
+		h.Set("x-simulated-trading", "1")
+	}
 }
 
 func signHmac(preSignedString, secret string) string {

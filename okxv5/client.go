@@ -64,8 +64,8 @@ func (o *Client) WithAppendPath(path string) *Client {
 	return o
 }
 
-func (o *Client) WithAuth(key, secret, password string) *Client {
-	o.s = NewSign(key, secret, password)
+func (o *Client) WithAuth(key, secret, password string, isTest bool) *Client {
+	o.s = NewSign(key, secret, password, isTest)
 	return o
 }
 

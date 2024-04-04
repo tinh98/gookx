@@ -21,7 +21,7 @@ type WsPrivate struct {
 func NewWsPrivate(key, secret, password string, isTest bool) *WsPrivate {
 	o := new(WsPrivate)
 	o.c = NewWsClient(isTest)
-	o.s = NewSign(key, secret, password)
+	o.s = NewSign(key, secret, password, isTest)
 	o.subscriptions = NewSubscriptions(o)
 	o.c.WithPath("v5/private")
 	if isTest {
