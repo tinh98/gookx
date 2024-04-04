@@ -18,12 +18,15 @@ type WsPrivate struct {
 	subscriptions  *Subscriptions
 }
 
-func NewWsPrivate(key, secret, password string) *WsPrivate {
+func NewWsPrivate(key, secret, password string, isTest bool) *WsPrivate {
 	o := new(WsPrivate)
-	o.c = NewWsClient()
+	o.c = NewWsClient(isTest)
 	o.s = NewSign(key, secret, password)
 	o.subscriptions = NewSubscriptions(o)
 	o.c.WithPath("v5/private")
+	if isTest {
+		o.c.WithPath("v5/private" + BrokerId)
+	}
 	return o
 }
 
