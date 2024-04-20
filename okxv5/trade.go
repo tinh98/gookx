@@ -9,12 +9,13 @@ type PlaceOrder struct {
 	TdMode     TradeMode
 	Side       Side
 	OrdType    OrderType
-	Sz         string   // Quantity of the instrument to buy or sell
-	Px         string   `json:",omitempty"` // Limit price (the price you want to buy or sell at)
-	PosSide    *PosSide `json:",omitempty"`
-	ClOrdId    string   `json:",omitempty"`
-	ReduceOnly *bool    `json:",omitempty"`
-	Tag        string   `json:",omitempty"`
+	Sz         string         // Quantity of the instrument to buy or sell
+	Px         string         `json:",omitempty"` // Limit price (the price you want to buy or sell at)
+	PosSide    *PosSide       `json:",omitempty"`
+	ClOrdId    string         `json:",omitempty"`
+	ReduceOnly *bool          `json:",omitempty"`
+	Tag        string         `json:",omitempty"`
+	TgtCcy     TargetCurrency `json:",omitempty"`
 }
 
 type OrderDetail struct {
@@ -31,7 +32,7 @@ func (o *Client) PlaceOrder(v PlaceOrder) Response[[]OrderDetail] {
 
 func (o PlaceOrder) Do(c *Client) Response[[]OrderDetail] {
 
-	o.Tag = GinAreaTag
+	//o.Tag = GinAreaTag
 	return Post(c, "trade/order", o, forward[[]OrderDetail])
 }
 

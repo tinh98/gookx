@@ -26,6 +26,13 @@ const (
 	SpotIsolatedMode TradeMode = "spot_isolated"
 )
 
+type TargetCurrency string
+
+const (
+	BaseCcy  = "base_ccy"
+	QuoteCcy = "quote_ccy"
+)
+
 type Side string
 
 const (
